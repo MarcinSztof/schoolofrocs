@@ -1,0 +1,38 @@
+public class Solution
+{
+    public int MinPathSum(int[][] grid)
+    {
+        var rows = grid.Length;
+        var cols = grid[0].Length;
+        if (rows == 1 && cols == 1) return grid[0][0];
+        
+        var minSum = new int[rows, cols];
+        
+        // initialize 0, 0
+        minSum[0, 0] = grid[0][0];
+        
+        // calculate all rows on column 0
+        for (var r = 1; r < rows; r++)
+        {
+            minSum[r, 0] = grid[r][0] + minSum[r - 1, 0];
+        }
+        
+        // calculate all cols on row 0
+        for (var c = 1; c < cols; c++)
+        {
+            minSum[0, c] = grid[0][c] + minSum[0, c - 1];
+        }
+        
+        // calculate the rest of the grid, skipping the 1st row and 1st col
+        // due to the pre calcs, we can skip checking every index minus 1
+        for (var r = 1; r < rows; r++) 
+        {
+            for (var c = 1; c < cols; c++)
+            {
+                minSum[r, c] = grid[r][c] + Math.Min(minSum[r, c - 1], minSum[r - 1, c]);
+            }
+        }
+        
+        return minSum[rows - 1, cols - 1];
+    }
+}
